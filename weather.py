@@ -20,7 +20,7 @@ class Geolocator:
 
 
 class Weather:
-    def __init__(self, api_k: str, city: str = None, lat=None, lon=None):
+    def __init__(self, api_k: str, city: str = None, lat=None, lon=None) -> None:
         self.api_k = api_k
         if city:
             self.lat, self.lon = Geolocator(self.api_k, city).get_coordinates()
@@ -30,13 +30,13 @@ class Weather:
             self.lon = lon
             self.data = self._get_response()
 
-    def _get_response(self):
+    def _get_response(self) -> str:
         base_url = 'https://api.openweathermap.org/data/2.5/forecast'
         r = requests.get(f'{base_url}?lat={self.lat}&lon={self.lon}&'
                          f'appid={self.api_k}&units=metric')
         return r.json()
 
-    def forecast_12h(self):
+    def forecast_12h(self) -> str:
         try:
             res = self.data
         except AttributeError:
