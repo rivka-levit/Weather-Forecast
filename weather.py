@@ -9,6 +9,9 @@ class Geolocator:
         self.city = city
 
     def get_coordinates(self) -> tuple:
+        """
+        Returns latitude and longitude for the city as a tuple
+        """
         response = json.loads(self._get_response())
         if response:
             return response[0]['lat'], response[0]['lon']
@@ -38,15 +41,22 @@ class Weather:
                          f'appid={self.api_k}&units=metric')
         return r.text
 
-    def forecast_12h(self) -> str:
+    def forecast_12h(self) -> dict | str:
+        """
+        Returns 3-hour data for the next 12 hours as a dict
+        """
         try:
-            data = str(self.data['list'][:4])
+            data = self.data['list'][:4]
         except (AttributeError, KeyError):
             data = 'There are no such coordinates. Provide another city ' \
                    'or a lat and lon arguments'
         return data
 
-    def forecast_12h_simplified(self):
+    def forecast_12h_simplified(self) -> list[tuple] | str:
+        """
+        Returns date, temperature and sky conditions every 3 hours
+        for the next 12 hours as a list of tuples.
+        """
         simple_data = list()
         try:
             data = self.data['list'][:4]
