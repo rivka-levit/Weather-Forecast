@@ -45,9 +45,22 @@ class Weather:
         return data
 
     def forecast_12h_simplified(self):
-        pass
+        simple_data = list()
+        try:
+            data = self.data['list'][:4]
+            for period in data:
+                simple_data.append(
+                    (
+                        period['dt_txt'],
+                        period['main']['temp'],
+                        period['weather'][0]['description']
+                    )
+                )
+        except AttributeError:
+            simple_data = 'Provide either a city or a lat and lon arguments'
+        return simple_data
 
 
 if __name__ == '__main__':
     weather = Weather(api_key, city='Haifa')
-    pprint(weather.forecast_12h())
+    print(weather.forecast_12h_simplified())
