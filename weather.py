@@ -1,7 +1,6 @@
 import requests
 import json
 from api_key import api_key
-from pprint import pprint
 
 
 class Geolocator:
@@ -11,7 +10,9 @@ class Geolocator:
 
     def get_coordinates(self) -> tuple:
         response = json.loads(self._get_response())
-        return response[0]['lat'], response[0]['lon']
+        if response:
+            return response[0]['lat'], response[0]['lon']
+        return None, None
 
     def _get_response(self):
         base_url = 'https://api.openweathermap.org/geo/1.0/direct'
@@ -40,8 +41,9 @@ class Weather:
     def forecast_12h(self) -> str:
         try:
             data = str(self.data['list'][:4])
-        except AttributeError:
-            data = 'Provide either a city or a lat and lon arguments'
+        except (AttributeError, KeyError):
+            data = 'There are no such coordinates. Provide another city ' \
+                   'or a lat and lon arguments'
         return data
 
     def forecast_12h_simplified(self):
@@ -56,8 +58,9 @@ class Weather:
                         period['weather'][0]['description']
                     )
                 )
-        except AttributeError:
-            simple_data = 'Provide either a city or a lat and lon arguments'
+        except (AttributeError, KeyError):
+            simple_data = 'There are no such coordinates. Provide another city ' \
+                          'or a lat and lon arguments'
         return simple_data
 
 
